@@ -58,7 +58,8 @@ class TasksController extends Controller
         ]);
         
         $request->user()->tasks()->create([
-            'content' => $request->content,
+            'status' => $request->status,
+            'content' => $request->content //フォームから送られてきた contetnを代入
         ]);
 
         return redirect('/');
