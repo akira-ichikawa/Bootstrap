@@ -57,10 +57,9 @@ class TasksController extends Controller
             'content' => 'required|max:191',
         ]);
         
-        $task = new Task;
-        $task->status = $request->status;
-        $task->content = $request->content;
-        $task->save();
+        $request->user()->tasks()->create([
+            'content' => $request->content,
+        ]);
 
         return redirect('/');
     }
@@ -125,9 +124,12 @@ class TasksController extends Controller
      */
     public function destroy($id)
     {
-        $task = Task::find($id);
-        $task->delete();
+        $tasklist = \App\Tasklist::find($id);
 
-        return redirect('/');
+        if (\Auth::id() === $tasklist->user_id) {
+            $tasklist->delete();
+        }
+
+        return redirect()->back();
     }
 }
